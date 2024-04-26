@@ -4,7 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const errorController = require('./controllers/error');
-const db = require('./util/database');
+const sequelize = require('./util/database');
 
 const app = express();
 
@@ -22,6 +22,16 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-app.listen(3000,()=>{
-    console.log("Running in port 3000");
-});
+sequelize
+.sync()   //Creats table in database and also adds some timestamps column for us which can be diabled
+.then(result =>{
+   // console.log(result);
+    app.listen(3000,()=>{
+        console.log("Running in port 3000");
+    });
+})
+.catch(err =>{
+    console.log(err);
+})
+
+
